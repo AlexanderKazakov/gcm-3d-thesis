@@ -1,0 +1,48 @@
+\section{Приложение}
+\subsection{Диагонализация матриц из уравнений модели в случае орторомбической анизотропии и совпадения координатных осей с главными направлениями анизотропии}
+\label{application1}
+
+В указанном случае матрицы из уравнения \eqref{simple_matrix_equation} и их спектральное разложение $\mathbf{A} = \mathbf{\Omega}^{-1} \mathbf{L} \mathbf{\Omega}$ приведены ниже. Порядок собственных значений в $\mathbf{L}$ и, соответственно, собственных векторов в $\mathbf{\Omega}^{-1}$ следующий: поперечная волна против оси, поперечная волна вдоль оси, другая поперечная волна против оси, другая поперечная волна вдоль оси, продольная волна против оси, продольная волна вдоль оси, три неподвижных инварианта.
+
+\[\mathbf{A}_x = \\
+\begin{pmatrix}0 & 0 & 0 & -\frac{1}{\rho} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0 & 0 & 0\cr -c_{11} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & -c_{66} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & -c_{55} & 0 & 0 & 0 & 0 & 0 & 0\cr -c_{12} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr -c_{13} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\end{pmatrix}\]
+
+\[\mathbf{L}_x = \\
+diag(-\sqrt{\frac{c_{66}}{\rho}},\sqrt{\frac{c_{66}}{\rho}},-\sqrt{\frac{c_{55}}{\rho}},\sqrt{\frac{c_{55}}{\rho}},-\sqrt{\frac{c_{11}}{\rho}},\sqrt{\frac{c_{11}}{\rho}},0,0,0)\]
+
+\[{\mathbf{\Omega}_x}^{-1} = 
+\begin{pmatrix}0 & 0 & 0 & 0 & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0\cr \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{1}{2}\,\sqrt{c_{11} \rho} & -\frac{1}{2}\,\sqrt{c_{11} \rho} & 0 & 0 & 0\cr \frac{1}{2}\,\sqrt{c_{66} \rho} & -\frac{1}{2}\,\sqrt{c_{66} \rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & \frac{1}{2}\,\sqrt{c_{55} \rho} & -\frac{1}{2}\,\sqrt{c_{55} \rho} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{\frac{1}{2}\,c_{12}\,\sqrt{\rho}}{\sqrt{c_{11}}} & -\frac{\frac{1}{2}\,c_{12}\,\sqrt{\rho}}{\sqrt{c_{11}}} & 1 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\cr 0 & 0 & 0 & 0 & \frac{\frac{1}{2}\,c_{13}\,\sqrt{\rho}}{\sqrt{c_{11}}} & -\frac{\frac{1}{2}\,c_{13}\,\sqrt{\rho}}{\sqrt{c_{11}}} & 0 & 0 & 1\end{pmatrix}\]
+
+\[\mathbf{\Omega}_x = \\
+\begin{pmatrix}0 & 1 & 0 & 0 & \frac{1}{\sqrt{c_{66} \rho}} & 0 & 0 & 0 & 0\cr 0 & 1 & 0 & 0 & -\frac{1}{\sqrt{c_{66} \rho}} & 0 & 0 & 0 & 0\cr 0 & 0 & 1 & 0 & 0 & \frac{1}{\sqrt{c_{55} \rho}} & 0 & 0 & 0\cr 0 & 0 & 1 & 0 & 0 & -\frac{1}{\sqrt{c_{55} \rho}} & 0 & 0 & 0\cr 1 & 0 & 0 & \frac{1}{\sqrt{c_{11} \rho}} & 0 & 0 & 0 & 0 & 0\cr 1 & 0 & 0 & -\frac{1}{\sqrt{c_{11} \rho}} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & -\frac{c_{12}}{c_{11}} & 0 & 0 & 1 & 0 & 0.0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\cr 0 & 0 & 0 & -\frac{c_{13}}{c_{11}} & 0 & 0 & 0 & 0 & 1\end{pmatrix}\]
+
+
+\[\mathbf{A}_y = \\
+\begin{pmatrix}0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0\cr 0 & -c_{12} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr -c_{66} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & -c_{22} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & -c_{44} & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & -c_{23} & 0 & 0 & 0 & 0 & 0 & 0 & 0\end{pmatrix}\]
+
+
+\[\mathbf{L}_y = \\
+(-\sqrt{\frac{c_{66}}{\rho}},\sqrt{\frac{c_{66}}{\rho}},-\sqrt{\frac{c_{44}}{\rho}},\sqrt{\frac{c_{44}}{\rho}},-\sqrt{\frac{c_{22}}{\rho}},\sqrt{\frac{c_{22}}{\rho}}, 0, 0, 0)\]
+
+
+\[{\mathbf{\Omega}_y}^{-1} = 
+\begin{pmatrix}\frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0\cr 0 & 0 & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{\frac{1}{2}\,c_{12}}{\sqrt{\frac{c_{22}}{\rho}}} & -\frac{\frac{1}{2}\,c_{12}}{\sqrt{\frac{c_{22}}{\rho}}} & 1 & 0 & 0\cr \frac{1}{2}\,\sqrt{c_{66} \rho} & -\frac{1}{2}\,\sqrt{c_{66} \rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\cr 0 & 0 & 0 & 0 & \frac{1}{2}\,\sqrt{c_{22} \rho} & -\frac{1}{2}\,\sqrt{c_{22} \rho} & 0 & 0 & 0\cr 0 & 0 & \frac{1}{2}\,\sqrt{c_{44} \rho} & -\frac{1}{2}\,\sqrt{c_{44} \rho} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{\frac{1}{2}\,c_{23}\,\sqrt{\rho}}{\sqrt{c_{22}}} & -\frac{\frac{1}{2}\,c_{23}\,\sqrt{\rho}}{\sqrt{c_{22}}} & 0 & 0 & 1\end{pmatrix}\]
+
+\[\mathbf{\Omega}_y = \\
+\begin{pmatrix}1 & 0 & 0 & 0 & \frac{1}{\sqrt{c_{66} \rho}} & 0 & 0 & 0 & 0\cr 1 & 0 & 0 & 0 & -\frac{1}{\sqrt{c_{66} \rho}} & 0 & 0 & 0 & 0\cr 0 & 0 & 1 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{c_{44} \rho}} & 0\cr 0 & 0 & 1 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{c_{44} \rho}} & 0\cr 0 & 1 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{c_{22} \rho}} & 0 & 0\cr 0 & 1 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{c_{22} \rho}} & 0 & 0\cr 0 & 0 & 0 & 1 & 0 & 0 & -\frac{c_{12}}{c_{22}} & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & -\frac{c_{23}}{c_{22}} & 0 & 1\end{pmatrix}\]
+
+
+\[\mathbf{A}_z = \\
+\begin{pmatrix}0 & 0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\rho} & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\rho}\cr 0 & 0 & -c_{13} & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr -c_{55} & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & -c_{23} & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & -c_{44} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & -c_{33} & 0 & 0 & 0 & 0 & 0 & 0\end{pmatrix}\]
+
+\[\mathbf{L}_z = \\
+(-\sqrt{\frac{c_{55}}{\rho}},\sqrt{\frac{c_{55}}{\rho}},-\sqrt{\frac{c_{44}}{\rho}},\sqrt{\frac{c_{44}}{\rho}},-\sqrt{\frac{c_{33}}{\rho}},\sqrt{\frac{c_{33}}{\rho}},0, 0, 0)\]
+
+\[{\mathbf{\Omega}_z}^{-1} = 
+\begin{pmatrix}\frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{1}{2} & \frac{1}{2} & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{\frac{1}{2}\,c_{13}\,\sqrt{\rho}}{\sqrt{c_{33}}} & -\frac{\frac{1}{2}\,c_{13}\,\sqrt{\rho}}{\sqrt{c_{33}}} & 1 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\cr \frac{1}{2}\,\sqrt{c_{55} \rho} & -\frac{1}{2}\,\sqrt{c_{55} \rho} & 0 & 0 & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{\frac{1}{2}\,c_{23}\,\sqrt{\rho}}{\sqrt{c_{33}}} & -\frac{\frac{1}{2}\,c_{23}\,\sqrt{\rho}}{\sqrt{c_{33}}} & 0 & 0 & 1\cr 0 & 0 & \frac{1}{2}\,\sqrt{c_{44} \rho} & -\frac{1}{2}\,\sqrt{c_{44} \rho} & 0 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & \frac{1}{2}\,\sqrt{c_{33} \rho} & -\frac{1}{2}\,\sqrt{c_{33} \rho} & 0 & 0 & 0\end{pmatrix}\]
+
+\[\mathbf{\Omega}_z = \\
+\begin{pmatrix}1 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{c_{55} \rho}} & 0 & 0 & 0\cr 1 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{c_{55} \rho}} & 0 & 0 & 0\cr 0 & 1 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{c_{44} \rho}} & 0\cr 0 & 1 & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{c_{44} \rho}} & 0\cr 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & \frac{1}{\sqrt{c_{33} \rho}}\cr 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & -\frac{1}{\sqrt{c_{33} \rho}}\cr 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & -\frac{1\,c_{13}}{c_{33}}\cr 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\cr 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & -\frac{c_{23}}{c_{33}}\end{pmatrix}\]
+
+
+
