@@ -1,0 +1,13 @@
+set title "3D"
+set key off
+
+set xlabel "number of vertices"
+set ylabel "proportion"
+set terminal png
+
+set output 'numberOfVertices3D.png'
+plot '3dnumVertices' using 1:2 with impulses 
+
+set output 'numberOfVertices2D.png'
+plot '2dnumVertices' using 1:2 with impulses 
+
