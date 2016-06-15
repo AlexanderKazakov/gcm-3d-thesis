@@ -1,2 +1,2 @@
-gcm3d-thesis
+My master thesis about grid-characteristic method
 ============
