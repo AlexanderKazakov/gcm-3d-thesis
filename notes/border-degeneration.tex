@@ -1,0 +1,239 @@
+\begin{center}
+	\Large\textbf{{{Вырождение матрицы граничного корректора СХМ в зависимости от угла между нормалью к границе и направлением расчёта}}}
+\end{center}
+
+\section{Упругость 3D -- фиксированная внешняя сила}
+Искомый вектор решения:
+\begin{eqnarray}
+	\vec{u}=(v_x,v_y,v_z,\sigma_{xx},\sigma_{xy},\sigma_{xz},\sigma_{yy},\sigma_{yz},\sigma_{zz})^{\small{T}}
+\end{eqnarray}
+
+Запись произвольного линейного граничного условия:
+\begin{eqnarray}
+\label{boundary_condition}
+	\mathbf{B} \cdot \vec{u} = \vec{b}.
+\end{eqnarray}
+
+Допустим, расчёт производится вдоль оси $x$. Это не уменьшает общности, так как направление нормали к границе $\vec{n}$ выбирается произвольно:
+\begin{eqnarray}
+	\vec{n} = (n_x, n_y, n_z)^{\small{T}}
+\end{eqnarray}
+
+Возьмём три внешних инварианта -- три однонаправленных волны вдоль оси $x$:
+\begin{align}
+	\mathbf{\Omega} =
+	\left( \begin{array}{cccccccccccc}
+	-1 & 0  &  0 \\
+	 0 & -1 &  0 \\
+	 0 &  0 & -1 \\
+	\frac{\lambda+2\mu}{c_1} & 0 & 0 \\
+	0 & \frac{\mu}{c_2} & 0 \\
+	0 & 0 & \frac{\mu}{c_2} \\
+	\frac{\lambda}{c_1} & 0 & 0 \\
+	0 & 0 & 0 \\
+	\frac{\lambda}{c_1} & 0 & 0 \\
+	\end{array} \right),
+\end{align} 
+
+здесь первый столбец -- p-волна, далее -- две s-волны, $\lambda, \mu$ -- параметры Ламе, $c_1, c_2$ -- скорости продольной и поперечной волн.
+
+Рассматриваем граничное условие фиксированной силы, приложенной к границе:
+\begin{eqnarray}
+\label{fixed_force_global}
+	\mathbf{\sigma} \cdot \vec{n} = \vec{f}.
+\end{eqnarray}
+
+Запись $\mathbf{\sigma} \cdot \vec{n}$ даёт выражение для силы, приложенной к полупространству с внешней нормалью $\vec{n}$, в глобальном базисе. Обычно в программе расчёт делается в локальном базисе, связанном с границей, однако это не меняет сути дела (проверено численно в том числе), поэтому далее для упрощения формул будем писать в глобальном базисе.
+
+Для \eqref{fixed_force_global} уравнение граничного условия \eqref{boundary_condition} сводится к $\vec{b} = \vec{f}$ и
+\begin{align}
+	\mathbf{B} =
+	\left( \begin{array}{cccccccccccc}
+	 0 & 0 & 0 & n_x & n_y & n_z & 0 & 0 & 0 \\
+	 0 & 0 & 0 & 0 & n_x & 0 & n_y & n_z & 0 \\
+	 0 & 0 & 0 & 0 & 0 & n_x & 0 & n_y & n_z \\
+	\end{array} \right).
+\end{align}
+
+После внутреннего расчёта -- учёта волн, пришедших изнутри -- выполняется граничная коррекция. Идея: добавление такой линейной комбинации внешних волн, которая обеспечит выполнение граничного условия.
+\begin{eqnarray}
+	\mathbf{B} \cdot (\vec{u}_{inner} + \mathbf{\Omega} \cdot \vec{\alpha}) = \vec{b}.
+\end{eqnarray}
+
+
+Как видно, для определения коэффициентов в линейной комбинации необходимо решить систему:
+\begin{eqnarray}
+	\mathbf{B} \mathbf{\Omega} \cdot \vec{\alpha} = \vec{b} - \mathbf{B} \cdot \vec{u}_{inner}.
+\end{eqnarray}
+
+Таким образом, нас интересует обусловленность именно матрицы $\mathbf{B} \mathbf{\Omega}$ размером $D \times D$, где $D$ -- размерность пространства.
+
+После перемножения получаем:
+\begin{align}
+	\mathbf{B} \mathbf{\Omega} = \frac{1}{c_1 c_2}
+	\left( \begin{array}{cccccccccccc}
+	 (\lambda + 2\mu) n_x c_2 & \mu n_y c_1 & \mu n_z c_1   \\
+	 \lambda n_y c_2          & \mu n_x c_1 & 0             \\
+	 \lambda n_z c_2          & 0 & \mu n_x c_1             \\
+	\end{array} \right).
+\end{align}
+
+\begin{eqnarray}
+	\det (\mathbf{B} \mathbf{\Omega}) = \frac{\mu^{2}}{c_2} \cdot n_x \cdot (2 (\lambda + \mu) n^2_x - \lambda)
+\end{eqnarray}
+
+Из условия $\det (\mathbf{B} \mathbf{\Omega}) = 0$ получаем:
+\begin{eqnarray}
+\left[
+\begin{gathered} 
+	 n_x = 0  \hfill  \\
+	 n^2_x = \frac{\lambda}{2(\lambda + \mu)} \equiv \nu < \frac{1}{2}, \hfill  \\
+\end{gathered} 
+\right.
+\end{eqnarray}
+
+где $\nu$ -- коэффициент Пуассона.
+
+
+\section{Упругость 2D -- фиксированная внешняя сила}
+Искомый вектор решения:
+\begin{eqnarray}
+	\vec{u}=(v_x,v_y,\sigma_{xx},\sigma_{xy},\sigma_{yy})^{\small{T}}
+\end{eqnarray}
+
+Два внешних инварианта -- p- и s-волны вдоль оси $x$:
+\begin{align}
+\label{outer_waves_elastic2d}
+	\mathbf{\Omega} =
+	\left( \begin{array}{cccccccccccc}
+	-1 & 0   \\
+	 0 & -1  \\
+	\frac{\lambda+2\mu}{c_1} & 0 \\
+	0 & \frac{\mu}{c_2} \\
+	\frac{\lambda}{c_1} & 0 \\
+	\end{array} \right),
+\end{align} 
+
+\begin{align}
+	\mathbf{B} =
+	\left( \begin{array}{cccccccccccc}
+	 0 & 0 & n_x & n_y & 0 \\
+	 0 & 0 & 0 & n_x & n_y \\
+	\end{array} \right).
+\end{align}
+
+\begin{align}
+	\mathbf{B} \mathbf{\Omega} = \frac{1}{c_1 c_2}
+	\left( \begin{array}{cccccccccccc}
+	 (\lambda + 2\mu) n_x c_2 & \mu n_y c_1    \\
+	 \lambda n_y c_2          & \mu n_x c_1    \\
+	\end{array} \right).
+\end{align}
+
+\begin{eqnarray}
+	\det (\mathbf{B} \mathbf{\Omega}) = \frac{\mu}{c_1 c_2} \cdot (2 (\lambda + \mu) n^2_x - \lambda)
+\end{eqnarray}
+
+Из условия $\det (\mathbf{B} \mathbf{\Omega}) = 0$ получаем:
+\begin{eqnarray}
+	 n^2_x = \nu.
+\end{eqnarray}
+
+
+\section{Упругость -- фиксированная скорость на границе}
+
+В глобальном базисе:
+\begin{align}
+	\mathbf{B} =
+	\left( \begin{array}{cccccccccccc}
+	 1 & 0 & 0 & 0 & 0 \\
+	 0 & 1 & 0 & 0 & 0 \\
+	\end{array} \right).
+\end{align}
+
+В локальном базисе $\{\vec{m}, \vec{n}\}$:
+\begin{align}
+	\mathbf{B} =
+	\left( \begin{array}{cccccccccccc}
+	 m_x & m_y & 0 & 0 & 0 \\
+	 n_x & n_y & 0 & 0 & 0 \\
+	\end{array} \right).
+\end{align}
+
+Как видно из \eqref{outer_waves_elastic2d}, в случае фиксированной скорости первые $D$ столбцов матрицы $\mathbf{B}$, которые сами являются векторами локального или глобального базиса, умножаются на плюс-минус единичную матрицу, поэтому в данном случае всегда
+\begin{eqnarray}
+	 \det (\mathbf{B} \mathbf{\Omega}) = \pm 1.
+\end{eqnarray}
+
+
+\section{Акустика}
+Искомый вектор решения:
+\begin{align}
+	\vec{u} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{v} \\
+	 p \\
+	\end{array} \right),
+\end{align} 
+
+Независимо от размерности только один внешний инвариант -- p-волна вдоль направления $\vec{l}$:
+\begin{align}
+	\mathbf{\Omega} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{l} \\
+	 c \rho \\
+	\end{array} \right),
+\end{align} 
+
+Матрица для фиксированного давления:
+\begin{align}
+	\mathbf{B_p} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{0}^T & 1 \\
+	\end{array} \right), \quad
+	\mathbf{B_p} \mathbf{\Omega} = c \rho > 0.
+\end{align}
+
+Матрица для фиксированной нормальной скорости:
+\begin{align}
+	\mathbf{B_v} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{n}^T & 0 \\
+	\end{array} \right), \quad
+	\mathbf{B_v} \mathbf{\Omega} = (\vec{n} \cdot \vec{l}),
+\end{align}
+что в терминах выше означает $n_x = 0$.
+
+
+\section{Заключение}
+Как видно, наивное представление о том, что матрица граничного корректора вырождается только при перпендикулярности нормали и направления расчёта, не соответствует действительности. Более того, она может быть и не вырожденной при таком условии:
+
+
+\begin{center}
+    \begin{tabular}{ | l | l | l | }
+    \hline
+    Модель & Фикс. сила & Фикс. скорость \\ \hline
+    Упругость 3D & $\left[ \begin{gathered} n_x = 0  \hfill \\ n^2_x = \nu \hfill \\ \end{gathered} \right.$
+ & - \\ \hline
+    Упругость 2D & $n^2_x = \nu$ & -  \\ \hline
+    Акустика & - & $n_x = 0$     \\ \hline
+    \end{tabular}
+\end{center}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
