@@ -1,0 +1,271 @@
+\begin{center}
+	\Large\textbf{{{Описание метода расчёта граничных и контактных узлов в СХМ на неструктурированной сетке}}}
+\end{center}
+
+
+\section{Общая схема метода на границе}
+
+Запись произвольного линейного граничного условия для произвольной модели:
+\begin{eqnarray}
+\label{boundary_condition}
+	\mathbf{B} \cdot \vec{u} = \vec{b}.
+\end{eqnarray}
+Здесь $\vec{u}$ -- вектор решения размерности $N$, $\mathbf{B}$ -- матрица размерности $M \times N$, где $M$ -- количество дополнительных скалярных условий, которое даёт граничное условие. В ``хороших'' в смысле геометрии областей случаях оно совпадает с количеством внешних характеристик.
+
+Сначала делается расчёт граничных узлов, как внутренних -- все инварианты Римана, соответствующие внешним характеристикам, приравниваются к нулю. Получаем $\vec{u}^{inner}$. Затем выполняется граничная коррекция -- добавление такой линейной комбинации внешних волн, которая обеспечит выполнение граничного условия \eqref{boundary_condition}:
+\begin{eqnarray}
+	\mathbf{B} \cdot (\vec{u}^{inner} + \mathbf{\Omega} \cdot \vec{\alpha}) = \vec{b}.
+\end{eqnarray}
+Здесь $\mathbf{\Omega}$ -- матрица, в столбцах которой стоят инварианты Римана, соответствующие внешним характеристикам (``волнам, пришедшим снаружи''), $\vec{\alpha}$ -- коэффициенты в линейной комбинации, которые нужно определить.
+
+Для определения коэффициентов $\vec{\alpha}$ необходимо решить СЛАУ с матрицей $\mathbf{B} \mathbf{\Omega}$ размерностью $M \times M$:
+\begin{eqnarray}
+	\mathbf{B} \mathbf{\Omega} \cdot \vec{\alpha} = \vec{b} - \mathbf{B} \cdot \vec{u}^{inner}.
+\end{eqnarray}
+
+После определения коэффициентов линейной комбинации производится собственно коррекция:
+\begin{eqnarray}
+\vec{u}^{n+1} = \vec{u}^{inner} + \mathbf{\Omega} \cdot \vec{\alpha}
+\end{eqnarray}
+
+Для модели акустики независимо от размерности пространства $M = 1$, для модели упругости в пространстве размерности $D$ выполняется $M = D$. Таким образом максимальная -- для упругости в 3D -- размерность матрицы СЛАУ равна трём. Поэтому для решения СЛАУ используется просто правило Крамера.
+
+Отметим, что вид конкретного граничного условия нигде выше не использовался, он определяется исключительно 
+$\mathbf{B}$ и $\vec{b}$ в \eqref{boundary_condition}. Так же и в программе алгоритм расчёта граничных узлов реализован для произвольного граничного условия, а выбор конкретного условия -- это просто выбор $\mathbf{B}$ и $\vec{b}$.
+ 
+
+\section{Виды граничных условий}
+
+\subsection{Фиксированное напряжение на границе, упругость}
+
+Условие фиксированной силы $\vec{f}$, приложенной к полупространству с внешней нормалью $\vec{n}$:
+\begin{eqnarray}
+\label{fixed_force}
+	\mathbf{\sigma} \cdot \vec{n} = \vec{f}.
+\end{eqnarray}
+
+В программе значения искомой функции хранятся в глобальном базисе. То есть тензор напряжений $\mathbf{\sigma}$ известен в глобальном базисе. Если значение $\vec{f}$ также указано в глобальном базисе, то \eqref{boundary_condition} запишется в виде: $\vec{b} = \vec{f}$,
+\begin{align}
+\label{fixed_force_global_basis}
+\begin{split}
+	\mathbf{B}_{3D} &=
+	\left( \begin{array}{cccccccccccc}
+	 0 & 0 & 0 & n_x & n_y & n_z & 0 & 0 & 0 \\
+	 0 & 0 & 0 & 0 & n_x & 0 & n_y & n_z & 0 \\
+	 0 & 0 & 0 & 0 & 0 & n_x & 0 & n_y & n_z \\
+	\end{array} \right), \\
+	\mathbf{B}_{2D} &=
+	\left( \begin{array}{cccccccccccc}
+	 0 & 0 & n_x & n_y & 0 \\
+	 0 & 0 & 0 & n_x & n_y \\
+	\end{array} \right).
+\end{split}
+\end{align}
+
+Здесь предполагается, что искомый вектор решения:
+\begin{align}
+	\vec{u}_{3D} &= (v_x,v_y,v_z,\sigma_{xx},\sigma_{xy},\sigma_{xz},\sigma_{yy},\sigma_{yz},\sigma_{zz})^{T}, \\
+	\vec{u}_{2D} &= (v_x,v_y,\sigma_{xx},\sigma_{xy},\sigma_{yy})^{T},
+\end{align}
+а $n_x, n_y, n_z$ -- компоненты нормали в глобальном базисе.
+
+Эти формулы для глобального базиса будут необходимы ниже для реализации контактных условий. Граничные же условия обычно ставятся в локальном базисе, связанном с границей (нормальные и касательные напряжения). В этом случае нужно или компоненты вектора силы перевести из локального базиса в глобальный (вариант 1), или тензор напряжений перевести в локальный базис (вариант 2). И нормаль, естественно, тоже должна быть взята в том базисе, в котором производится запись.
+
+Пусть $\mathbf{S}$ -- матрица перехода из локального ``$l$'' базиса в глобальный ``$g$'':
+\begin{align}
+	\mathbf{S} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{l_1} & \vec{l_2} & \vec{l_3}
+	\end{array} \right),
+\end{align}
+где $\vec{l_i}$ -- вектора базиса ``$l$'', записанные в базисе ``$g$''. Тогда вектор силы преобразуется по правилу преобразования векторов, а тензор напряжения по правилу преобразования тензоров второго ранга:
+\begin{eqnarray}
+	\vec{f}_g = \mathbf{S} \vec{f}_l, \\
+	\mathbf{\sigma}_l = \mathbf{S}^{-1} \mathbf{\sigma}_g \mathbf{S}.
+\end{eqnarray}
+
+Вариант 1 -- начинаем от глобального базиса:
+\begin{eqnarray}
+	\mathbf{\sigma}_g \cdot \vec{n}_g = \vec{f}_g = \mathbf{S} \vec{f}_l \\
+	\mathbf{S}^{-1} \mathbf{\sigma}_g \cdot \vec{n}_g = \vec{f}_l.
+\end{eqnarray}
+
+Вариант 2 -- от локального:
+\begin{eqnarray}
+	\mathbf{\sigma}_l \cdot \vec{n}_l = \vec{f}_l, \\
+	\mathbf{S}^{-1} \mathbf{\sigma}_g \mathbf{S} \cdot \vec{n}_l = \vec{f}_l, \\
+	\mathbf{S}^{-1} \mathbf{\sigma}_g \cdot \vec{n}_g = \vec{f}_l.
+\end{eqnarray}
+
+Что закономерно, в обоих вариантах приходим к одинаковому результату. Поскольку в нашем случае переход между локальным и глобальным базисом делается простым поворотом, матрица $\mathbf{S}$ -- ортогональная, $\mathbf{S}^{-1} = \mathbf{S}^T$.
+
+Итак, приходим к выражению:
+\begin{eqnarray}
+	\mathbf{S}^T \mathbf{\sigma}_g \cdot \vec{n}_g = \vec{f}_l.
+\end{eqnarray}
+
+Если перейти к индексной записи:
+\begin{eqnarray}
+	(S_{ki} {n_g}_j) {\sigma_g}_{kj} = {f_l}_i.
+\end{eqnarray}
+
+Теперь легко получить её в виде, необходимом для \eqref{boundary_condition}.
+
+
+\subsection{Фиксированная скорость на границе, упругость}
+
+В глобальном базисе $\vec{b} = \vec{v}_g$,
+\begin{align}
+\label{fixed_velocity_global_basis}
+	\mathbf{B}_{2D} =
+	\left( \begin{array}{cccccccccccc}
+	 1 & 0 & 0 & 0 & 0 \\
+	 0 & 1 & 0 & 0 & 0 \\
+	\end{array} \right).
+\end{align}
+
+В локальном базисе с базисными векторами $\{\vec{m}, \vec{n}\}$ имеем $\vec{b} = \vec{v}_l$,
+\begin{align}
+	\mathbf{B}_{2D} =
+	\left( \begin{array}{cccccccccccc}
+	 m_x & m_y & 0 & 0 & 0 \\
+	 n_x & n_y & 0 & 0 & 0 \\
+	\end{array} \right).
+\end{align}
+
+В 3D аналогично.
+
+
+\subsection{Акустика}
+Искомый вектор решения:
+\begin{align}
+	\vec{u} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{v} \\
+	 p \\
+	\end{array} \right),
+\end{align}
+
+Для фиксированного давления $p_{fix}$ имеем $\vec{b} = p_{fix}$,
+\begin{align}
+\label{fixed_pressure_acoustic}
+	\mathbf{B} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{0}^T & 1 \\
+	\end{array} \right).
+\end{align}
+
+Для фиксированной нормальной скорости $v_{fix}$ имеем $\vec{b} = v_{fix}$,
+\begin{align}
+\label{fixed_normal_velocity_acoustic}
+	\mathbf{B} =
+	\left( \begin{array}{cccccccccccc}
+	 \vec{n}^T & 0 \\
+	\end{array} \right).
+\end{align}
+
+
+\section{Общая схема метода на контакте}
+Сразу оговоримся, что речь идёт о контакте двух тел. При этом для сложной неоднородной геометрии контакт в одной точке трёх и более тел -- вполне нормальное явление. В данный момент в программе такие случаи не обрабатываются, расчёт мультиконтактных узлов не производится вообще, все значения в них выставляются в ноль. TODO -- а ведь это тоже может быть источником ряби и неустойчивости, ведь для интерполяции соседних точек они всё равно используются.
+
+Запись произвольного линейного контактного условия для произвольных моделей (у каждого тела может быть своя модель):
+\begin{eqnarray}
+\label{contact_condition}
+\begin{split}
+	\mathbf{B}_{1A} \cdot \vec{u}_A = \mathbf{B}_{1B} \cdot \vec{u}_B, \\
+	\mathbf{B}_{2A} \cdot \vec{u}_A = \mathbf{B}_{2B} \cdot \vec{u}_B.
+\end{split}
+\end{eqnarray}
+Здесь обозначения те же, что и в \eqref{boundary_condition}. Поскольку контактируют два тела, уравнений тоже два, и они связаны между собой.
+
+Все действия аналогичны расчёту граничных узлов. Сначала делается расчёт контактных узлов, как внутренних -- все инварианты Римана, соответствующие внешним характеристикам, приравниваются к нулю. Получаем ${\vec{u}_A}^{inner}$ и ${\vec{u}_B}^{inner}$. Затем выполняется контактная коррекция -- добавление в обоих узлах такой линейной комбинации внешних волн, которая обеспечит выполнение контактного условия \eqref{contact_condition}. Распишем сообразно сказанному условие \eqref{contact_condition}:
+\begin{eqnarray}
+	\mathbf{B}_{1A} \cdot ({\vec{u}_A}^{inner} + \mathbf{\Omega}_A \cdot \vec{\alpha}_A) = \mathbf{B}_{1B} \cdot ({\vec{u}_B}^{inner} + \mathbf{\Omega}_B \cdot \vec{\alpha}_B), \\
+\label{second_line_in_contact_condition_wide}
+	\mathbf{B}_{2A} \cdot ({\vec{u}_A}^{inner} + \mathbf{\Omega}_A \cdot \vec{\alpha}_A) = \mathbf{B}_{2B} \cdot ({\vec{u}_B}^{inner} + \mathbf{\Omega}_B \cdot \vec{\alpha}_B).
+\end{eqnarray}
+
+Раскроем скобки:
+\begin{eqnarray}
+	(\mathbf{B}_{1A} \mathbf{\Omega}_A) \cdot  \vec{\alpha}_A = \mathbf{B}_{1B} \cdot {\vec{u}_B}^{inner} - \mathbf{B}_{1A} \cdot {\vec{u}_A}^{inner} + (\mathbf{B}_{1B} \mathbf{\Omega}_B) \cdot \vec{\alpha}_B
+\end{eqnarray}
+
+Сделаем переобозначения:
+\begin{align}
+\label{matrixRcontact}
+\mathbf{R} &= (\mathbf{B}_{1A} \mathbf{\Omega}_A)^{-1}, &\\
+\vec{p} &= \mathbf{R} \cdot (\mathbf{B}_{1B} \cdot {\vec{u}_B}^{inner} - \mathbf{B}_{1A} \cdot {\vec{u}_A}^{inner}), &\\
+\mathbf{Q} &= \mathbf{R} \cdot (\mathbf{B}_{1B} \mathbf{\Omega}_B).
+\end{align}
+
+Тогда:
+\begin{eqnarray}
+\label{alpha_A_from_B}
+\vec{\alpha}_A = \vec{p} + \mathbf{Q} \cdot \vec{\alpha}_B.
+\end{eqnarray}
+
+Подставляем в \eqref{second_line_in_contact_condition_wide}:
+\begin{eqnarray}
+\begin{split}
+\mathbf{B}_{2A} \cdot {\vec{u}_A}^{inner} + (\mathbf{B}_{2A} \mathbf{\Omega}_A) \cdot \vec{p} + (\mathbf{B}_{2A} \mathbf{\Omega}_A) \cdot \mathbf{Q} \cdot \vec{\alpha}_B = \\ =
+\mathbf{B}_{2B} \cdot {\vec{u}_B}^{inner} + (\mathbf{B}_{2B} \mathbf{\Omega}_B) \cdot \vec{\alpha}_B.
+\end{split}
+\end{eqnarray}
+
+Получаем СЛАУ на $\vec{\alpha}_B$:
+\begin{eqnarray}
+\label{SLE_on_alphaB}
+\begin{split}
+\Bigg[  (\mathbf{B}_{2B} \mathbf{\Omega}_B) - (\mathbf{B}_{2A} \mathbf{\Omega}_A) \cdot \mathbf{Q}  \Bigg] \cdot \vec{\alpha}_B = \\ = 
+(\mathbf{B}_{2A} \mathbf{\Omega}_A) \cdot \vec{p} + \mathbf{B}_{2A} \cdot {\vec{u}_A}^{inner} - \mathbf{B}_{2B} \cdot {\vec{u}_B}^{inner}.
+\end{split}
+\end{eqnarray}
+
+Решив систему на $\vec{\alpha}_B$, находим $\vec{\alpha}_A$ из \eqref{alpha_A_from_B}.
+
+После чего производим собственно коррекцию:
+\begin{eqnarray}
+{\vec{u}_A}^{n+1} = {\vec{u}_A}^{inner} + \mathbf{\Omega}_A \cdot \vec{\alpha}_A, \\
+{\vec{u}_B}^{n+1} = {\vec{u}_B}^{inner} + \mathbf{\Omega}_B \cdot \vec{\alpha}_B
+\end{eqnarray}
+
+Для проведения изложенных вычислений необходимо сначала один раз обратить матрицу размерностью $M \times M$ в \eqref{matrixRcontact}, а затем решить СЛАУ \eqref{SLE_on_alphaB} с матрицей той же размерности. Здесь $M$ -- количество дополнительных скалярных условий, которое даёт каждая из строк в \eqref{contact_condition}. Для модели акустики независимо от размерности пространства $M = 1$, для модели упругости в пространстве размерности $D$ выполняется $M = D$. Таким образом максимальная -- для упругости в 3D -- размерность матрицы СЛАУ равна трём. Это даёт возможность, как и в методе расчёта граничных узлов, использовать для обращения матрицы и решения системы явные аналитические формулы.
+
+Отметим, что вид конкретного контактного условия нигде выше не использовался, он определяется исключительно 
+$\mathbf{B}_{1A}$, $\mathbf{B}_{1B}$, $\mathbf{B}_{2A}$ и $\mathbf{B}_{2B}$ в \eqref{contact_condition}. Так же и в программе алгоритм расчёта контактных узлов реализован для произвольного контактного условия, а выбор конкретного условия -- это просто выбор $\mathbf{B}_{1A}$, $\mathbf{B}_{1B}$, $\mathbf{B}_{2A}$ и $\mathbf{B}_{2B}$.
+
+\section{Виды контактных условий}
+Рассмотрим для примера только два вида контактных условий: контакт двух упругих тел с полным слипанием и скольжение двух тел, подчиняющихся модели акустики.
+
+\subsection{Полное слипание на контакте, упругость-упругость}
+Полное слипание двух упругих тел означает равенство скоростей в точке контакта:
+\begin{eqnarray}
+\vec{v}_A = \vec{v}_B
+\end{eqnarray}
+и равенство сил, действующих на контактную поверхность:
+\begin{eqnarray}
+\mathbf{\sigma}_A \cdot \vec{n} = \mathbf{\sigma}_B \cdot \vec{n},
+\end{eqnarray}
+где $\vec{n}$ -- нормаль к поверхности контакта.
+
+Здесь все формулы записываются в глобальном базисе. Это означает, что в качестве $\mathbf{B}_{1A}$ и $\mathbf{B}_{1B}$ нужно взять матрицы \eqref{fixed_velocity_global_basis}, а в качестве $\mathbf{B}_{2A}$ и $\mathbf{B}_{2B}$ -- матрицы \eqref{fixed_force_global_basis}
+
+\subsection{Скольжение на контакте, акустика-акустика}
+Скольжение двух тел в модели акустики означает равенство компонент скорости вдоль направления контакта:
+\begin{eqnarray}
+\vec{v}_A \cdot \vec{n} = \vec{v}_B \cdot \vec{n}
+\end{eqnarray}
+и равенство давлений:
+\begin{eqnarray}
+p_A = p_B.
+\end{eqnarray}
+
+Это означает, что в качестве $\mathbf{B}_{1A}$ и $\mathbf{B}_{1B}$ нужно взять матрицы \eqref{fixed_normal_velocity_acoustic}, а в качестве $\mathbf{B}_{2A}$ и $\mathbf{B}_{2B}$ -- матрицы \eqref{fixed_pressure_acoustic}.
+
+
+
+
+
+
+
+
