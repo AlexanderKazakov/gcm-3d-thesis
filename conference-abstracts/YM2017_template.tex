@@ -1,0 +1,72 @@
+\documentclass[twocolumn]{article}
+\usepackage[cp1251]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{amsmath,amssymb}
+\setlength{\textwidth}{170mm} \setlength{\textheight}{242mm}
+\topmargin=-10mm
+\oddsidemargin=-4mm
+
+\begin{document}
+
+Пример оформления формул:
+\begin{equation}
+\label{eq_ivanov_1}
+  {\bf A x} = {\bf b},
+\end{equation}
+
+\begin{equation}
+\begin{array}{l}
+\displaystyle
+x = \frac{h^2}{3}\frac{\sigma}{\mu}\frac{\partial F}{\partial r}\\[3mm]
+%
+\displaystyle
+\frac{\partial y}{\partial t} = -\frac{1}{r}\sqrt{1+\left(\frac{\partial h}{\partial r}\right)^2},\quad \mbox{где } h = g(r).
+\end{array}
+\label{eq_ivanov_2}
+\end{equation}
+Оформление ссылок на формулы (\ref{eq_ivanov_1}), (\ref{eq_ivanov_2}).
+
+Примеры нумерованного списка:
+\begin{enumerate}
+\item неявная схема с приближенной LU-факторизацией для решения СЛАУ (\ref{eq_ivanov_1})
+и явным заданием граничных условий;
+\item неявная схема с точным обращением матрицы СЛАУ методами библеотеки Intel MKL для
+разреженных матриц: PARDISO и FGMRES;
+\item явная схема Рунге-Кутты по псевдовремени.
+\end{enumerate}
+
+
+Список литературы должен состоять не больше чем из 3-4 ссылок.
+Правила оформления: книга \cite{ct_ivanov1},
+статья в журнале \cite{ct_ivanov2}, труды конференции \cite{ct_ivanov3}, интернет-ресурс \cite{ct_ivanov4}.
+Для статьи в англоязычном журнале нужно заменить "Т." на "Vol." и знак "№" на "No".
+
+Оформление ссылки на грант:
+
+\emph{Работа выполнена при финансовой поддержке РНФ (заявка № 15-11-XXXXX).}
+
+При желании можно упомянуть научного руководителя:
+
+\emph{Научный руководитель -- д.ф.-м.н. Сидоров Д.Е.}
+
+\begin{thebibliography}{9}
+\bibitem{ct_ivanov1}
+{\sc Годунов~С.\,К.}
+Обыкновенные дифференциальные уравнения с постоянными коэффициентами. Краевые задачи.~/ Новосибирск:~НГУ, 1994.~--- 264~с.
+%
+\bibitem{ct_ivanov2}
+{\sc Когай~В.\,В., Фадеев~С.\,И., Лихошвай~В.\,А.}
+О численном исследовании автоколебаний в гипотетических генных сетях~//
+Вычисл. технологии.~--- 2005.~---  Т.~10, №~3, С.~56--71.
+%
+\bibitem{ct_ivanov3}
+{\sc Ivanov~I.\,I.}
+Problems in computational technologies~//
+Proc. of the Intern. Conf. "Comput. Technologies". Novosibirsk: ICT SB RAS.~--- 1988.~---   P.~225--229.
+%
+\bibitem{ct_ivanov4}
+{\sc Дубинин~М.}
+Описание и получение данных SRTM.
+Адрес доступа: http://gis-lab.info/qa/srtm.html (дата обращения 23.09.2014).
+\end{thebibliography}
+\end{document}
