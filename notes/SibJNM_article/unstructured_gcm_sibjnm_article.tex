@@ -767,55 +767,13 @@ $\{ \vec{v}_1, p_1 \}$ -- против оси $\xi_i$.
 области интегрирования. 
 
 
-\section{Результаты}
-В качестве основного и наиболее показательного результата применения численного метода можно 
-продемонстрировать расчёт распространения ультразвуковых волн в голове человека 
-с явным выделением пяти видов тканей: соединительной, мышечной, костной, мозга 
-и сосудов (см. рисунок \ref{fig:materials-3d}). 
-Используются уравнения моделей линейной упругости и акустики. 
-Волновая картина в 3D показана на рисунке 
-\ref{fig:waves-3d}. Визуализация осуществляется с помощью программы Paraview \cite{paraview}. 
-\begin{figure}[H]
-\centering
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=0.7\linewidth]{pictures/skull/materials-all.png}
-  \caption{Области различной реологии}
-  \label{fig:materials-3d}
-\end{subfigure}%
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=0.7\linewidth]{pictures/skull/waves-3d.png}
-  \caption{Волновая картина в 3D (цветом показано значение давления)}
-  \label{fig:waves-3d}
-\end{subfigure}
-\caption{Пример расчёта в гетерогенной области интегрирования сложной формы}
-\label{fig:results-3d}
-\end{figure}
-
-Для проведения расчётов используется тетраэдральная расчётная сетка, построенная средствами 
-программного комплекса ИВМ РАН "Ani3D" \cite{ani3d}. 
-В наиболее подробном её варианте содержится 1.4 млн. вершин и 8.5 млн. ячеек, 
-что позволяет разрешить крупные сосуды и смену слоёв ткани в височной области: 
-на наиболее тонкие места приходится по 5-10 ячеек, что продемонстрировано на рисунке 
-\ref{fig:refined-grid}. 
-\begin{figure}[H]
-\centering
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=0.7\linewidth]{pictures/skull/grid-vessels.png}
-  \caption{Сосуды}
-\end{subfigure}%
-\begin{subfigure}{.4\textwidth}
-  \centering
-  \includegraphics[width=0.7\linewidth]{pictures/skull/grid-muscles.png}
-  \caption{Мышечная ткань в височной области}
-\end{subfigure}
-\caption{Фрагменты неструктурированной расчётной сетки}
-\label{fig:refined-grid}
-\end{figure}
-
-Распространение волн в разрезе показано на рисунке \ref{fig:waves-z}.
+\section{Иллюстрация работы метода}
+В качестве весьма показательного результата применения численного метода можно 
+указать трёхмерный расчёт распространения ультразвуковых волн в голове человека 
+с явным выделением областей различных биологических тканей. 
+Подробности расчёта можно найти в \cite{skull}, здесь же продемонстрируем лишь 
+волновую картину в двумерном срезе, иллюстрирующую описанные выше проблемы 
+на рисунке \ref{fig:waves-z}. 
 \begin{figure}[H]
 \centering
 \begin{subfigure}{.25\textwidth}
@@ -846,9 +804,11 @@ $\{ \vec{v}_1, p_1 \}$ -- против оси $\xi_i$.
 Цветом показано значение давления, чёрными линиями разделены области различной реологии}
 \label{fig:waves-z}
 \end{figure}
-Как можно видеть, в местах контакта областей интегрирования 
-образуются нефизичные незатухающие осцилляции, в увеличенном масштабе показанные на рисунке 
-\ref{pic:oscillations}. По мнению автора, такие осцилляции являются следствием принципиальных 
+
+Как можно видеть, вблизи источника волн в местах контакта областей интегрирования 
+образуются нефизичные осцилляции, в увеличенном масштабе показанные на рисунке 
+\ref{pic:oscillations}. По мнению автора, 
+такие осцилляции являются следствием принципиальных 
 ограничений численного метода, описанных в разделе \ref{bad_border_cases} и 
 не могут быть устранены в рамках СХМ, основанного на расщеплении по направлениям. 
 \begin{figure}[H]
@@ -911,8 +871,10 @@ $\{ \vec{v}_1, p_1 \}$ -- против оси $\xi_i$.
 
 \bibitem{ani3d} 3D generator of anisotropic meshes http://sourceforge.net/projects/ani3d
 
-\bibitem{paraview} Ahrens, James, Geveci, Berk, Law, Charles, 
-ParaView: An End-User Tool for Large Data Visualization, Visualization Handbook, Elsevier, 2005, ISBN-13: 978-0123875822
+\bibitem{skull} K. A. Beklemysheva, G. K. Grigoriev, N. S. Kulberg, 
+A. O. Kazakov, I. B. Petrov, V. Yu. Salamatova, Y. V. Vassilevski, A. V. Vasyukov. 
+Transcranial ultrasound of cerebral vessels in silico: Proof of concept 
+// Russian Journal of Numerical Analysis and Mathematical Modelling 31(5)
 
 \end{thebibliography}
 
