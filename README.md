@@ -1,2 +1,2 @@
-My master thesis about grid-characteristic method
+My PhD thesis about the grid-characteristic method
 ============
